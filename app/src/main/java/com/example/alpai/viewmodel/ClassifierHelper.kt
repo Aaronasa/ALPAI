@@ -1,4 +1,4 @@
-package com.example.alpai
+package com.example.alpai.viewmodel
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -10,7 +10,6 @@ import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import java.nio.ByteBuffer
 
 class ClassifierHelper(val context: Context) {
 
