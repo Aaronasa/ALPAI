@@ -40,7 +40,6 @@ import androidx.core.content.ContextCompat
 import com.example.alpai.viewmodel.ClassifierHelper
 import com.example.alpai.model.ImageUtils
 
-// --- 3. LAYAR STATIC IMAGE (Foto & Galeri) ---
 @Composable
 fun StaticImageScreen(classifier: ClassifierHelper, onBack: () -> Unit) {
     val context = LocalContext.current
