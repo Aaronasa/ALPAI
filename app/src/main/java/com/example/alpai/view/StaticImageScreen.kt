@@ -32,26 +32,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.example.alpai.enmuclass.WasteCategory
 import com.example.alpai.viewmodel.ClassifierHelper
 import com.example.alpai.model.ImageUtils
+import com.example.alpai.model.WasteResult
 
 @Composable
 fun StaticImageScreen(classifier: ClassifierHelper, onBack: () -> Unit) {
     val context = LocalContext.current
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
-    var resultText by remember { mutableStateOf("Silakan ambil foto atau pilih gambar") }
+    var result by remember { mutableStateOf<WasteResult?>(null) }
 
     // Launcher Galeri
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             val bmp = ImageUtils.uriToBitmap(context, it)
             bitmap = bmp
-            bmp?.let { b -> resultText = classifier.classify(b) }
+            bmp?.let { b -> result = classifier.classify(b) }
         }
     }
 
@@ -59,7 +63,7 @@ fun StaticImageScreen(classifier: ClassifierHelper, onBack: () -> Unit) {
     val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bmp ->
         if (bmp != null) {
             bitmap = bmp
-            resultText = classifier.classify(bmp)
+            result = classifier.classify(bmp)
         }
     }
 
@@ -86,31 +90,53 @@ fun StaticImageScreen(classifier: ClassifierHelper, onBack: () -> Unit) {
         // Tampilan Gambar
         Box(
             modifier = Modifier
-                .weight(1f)
+                .weight(1.5f)
                 .fillMaxWidth()
                 .background(Color.LightGray, RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
-            if (bitmap != null) {
+            bitmap?.let {
                 Image(
-                    bitmap = bitmap!!.asImageBitmap(),
-                    contentDescription = "Hasil Foto",
-                    modifier = Modifier.fillMaxSize()
+                    bitmap = it.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
-            } else {
-                Text("Gambar akan muncul di sini", color = Color.DarkGray)
-            }
+            } ?: Text("Gambar akan muncul di sini")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // Teks Hasil
-        Text(
-            text = resultText,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-        )
+        result?.let {
+            Text(
+                text = "Objek: ${it.label}",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                text = "Kategori: ${it.category.displayName}",
+                fontWeight = FontWeight.SemiBold
+            )
+
+            if (it.category != WasteCategory.UNKNOWN) {
+                it.category.binImage?.let { img ->
+                    Image(
+                        painter = painterResource(img),
+                        contentDescription = null,
+                        modifier = Modifier.height(120.dp)
+                    )
+                }
+
+                Text(
+                    text = "Confidence: ${String.format("%.1f%%", it.confidence * 100)}",
+                    color = Color.DarkGray
+                )
+            }
+        }
+
 
         Spacer(modifier = Modifier.height(24.dp))
 

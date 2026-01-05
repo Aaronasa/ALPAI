@@ -1,7 +1,9 @@
-biological
-cardboard
-glass
-metal
-paper
-plastic
-trash
+Biological
+Metal
+Cardboard
+Plastic
+Glass
+Trash
+Paper
+Stereoform
+Bubblewrap
