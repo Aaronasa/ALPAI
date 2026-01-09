@@ -1,9 +1,10 @@
-Biological
-Metal
-Cardboard
-Plastic
-Glass
-Trash
-Paper
-Stereoform
-Bubblewrap
+0 biological
+1 cardboard
+2 glass
+3 metal
+4 paper
+5 plastic
+6 trash
+7 bubblewrap
+8 styrofoam
+9 human
