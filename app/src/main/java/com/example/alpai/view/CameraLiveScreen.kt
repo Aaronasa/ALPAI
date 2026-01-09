@@ -14,6 +14,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -118,17 +119,42 @@ fun CameraLiveScreen(classifier: ClassifierHelper, onBack: () -> Unit) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Objek: ${it.label}", color = Color.White, fontSize = 18.sp)
-                Text("Kategori: ${it.category.displayName}", color = Color.Yellow, fontSize = 20.sp)
+                Text("Objek: ${it.label}", color = Color.White)
 
-                if (it.category != WasteCategory.UNKNOWN) {
+                Text(
+                    it.category.displayName,
+                    color = Color.Yellow,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                // ❌ HUMAN = BUKAN SAMPAH
+                if (it.category == WasteCategory.HUMAN) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "Objek ini bukan sampah",
+                        color = Color.Red,
+                        fontWeight = FontWeight.Bold
+                    )
+
                     it.category.binImage?.let { img ->
+                        Spacer(modifier = Modifier.height(12.dp))
                         Image(
                             painter = painterResource(img),
                             contentDescription = null,
-                            modifier = Modifier.height(120.dp)
+                            modifier = Modifier.height(100.dp)
                         )
                     }
+                } else if (it.category != WasteCategory.UNKNOWN) {
+                    it.category.binImage?.let { img ->
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Image(
+                            painter = painterResource(img),
+                            contentDescription = null,
+                            modifier = Modifier.height(100.dp)
+                        )
+                    }
+
                     Text(
                         "Confidence: ${String.format("%.1f%%", it.confidence * 100)}",
                         color = Color.LightGray

@@ -9,5 +9,6 @@ enum class WasteCategory(
     RESIDUE("Residue", R.drawable.bin_residue),
     PAPER("Paper", R.drawable.bin_paper),
     MIX_RECYCLING("Mix Recycling", R.drawable.bin_mix),
+    HUMAN("Manusia (Bukan Sampah)", R.drawable.human),
     UNKNOWN("Tidak dapat diklasifikasikan", null)
 }

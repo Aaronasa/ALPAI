@@ -130,12 +130,16 @@ fun StaticImageScreen(classifier: ClassifierHelper, onBack: () -> Unit) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+
+                        // TITLE
                         Text(
                             text = "HASIL KLASIFIKASI",
                             style = MaterialTheme.typography.labelLarge,
                             color = Color.Gray,
                             letterSpacing = 1.sp
                         )
+
+                        // CATEGORY NAME
                         Text(
                             text = result!!.category.displayName,
                             fontSize = 30.sp,
@@ -143,6 +147,19 @@ fun StaticImageScreen(classifier: ClassifierHelper, onBack: () -> Unit) {
                             color = GreenPrimary,
                             textAlign = TextAlign.Center
                         )
+
+                        // 🔴 KHUSUS HUMAN
+                        if (result!!.category == WasteCategory.HUMAN) {
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = "Objek ini bukan sampah",
+                                color = Color.Red,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
+                        }
+
+                        // LABEL + CONFIDENCE
                         Surface(
                             color = GreenSecondary.copy(alpha = 0.1f),
                             shape = RoundedCornerShape(8.dp)
@@ -156,6 +173,7 @@ fun StaticImageScreen(classifier: ClassifierHelper, onBack: () -> Unit) {
                             )
                         }
 
+                        // IMAGE (KECUALI UNKNOWN)
                         if (result!!.category != WasteCategory.UNKNOWN) {
                             result!!.category.binImage?.let { img ->
                                 Spacer(modifier = Modifier.height(20.dp))
@@ -168,13 +186,15 @@ fun StaticImageScreen(classifier: ClassifierHelper, onBack: () -> Unit) {
                         }
                     }
                 } else {
+                    // EMPTY STATE (TETAP ADA)
                     Text(
-                        "Ambil foto sampah Anda untuk mengetahui kategori pembuangannya",
+                        text = "Ambil foto sampah Anda untuk mengetahui kategori pembuangannya",
                         textAlign = TextAlign.Center,
                         color = Color.Gray.copy(alpha = 0.8f),
                         modifier = Modifier.padding(horizontal = 40.dp)
                     )
                 }
+
 
                 Spacer(modifier = Modifier.height(48.dp))
 
